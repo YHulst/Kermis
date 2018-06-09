@@ -1,17 +1,46 @@
 package kermisPackage;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 class Kassa {
 	int totaleKaartverkoop;
 	double totaleOmzet;
 	
-	void kasBijhouden(Kermis kermis, int antwoord) {	
-		kermis.attracties.get(antwoord - 1).setKaartverkoopAttractie();	
-	//	int kaartverkoopAttractie = kermis.attracties.get(antwoord - 1).getKaartverkoopAttractie();
+	void kasBijhouden(Attractie attractie) {	
+		attractie.setKaartverkoopAttractie();		
 		totaleKaartverkoop ++;
-		kermis.attracties.get(antwoord - 1).setOmzetAttractie();		
-	//	double omzetAttractie = kermis.attracties.get(antwoord - 1).getOmzetAttractie();
-		totaleOmzet += kermis.attracties.get(antwoord - 1).getPrijs();
+		attractie.setOmzetAttractie();			
+		totaleOmzet += attractie.getPrijs();
 	}
 	
+	void geefInfoKaartverkoop(Kermis kermis) {
+		System.out.print("Totale kaartverkoop: " + kermis.kassa.totaleKaartverkoop);
+		if (kermis.kassa.totaleKaartverkoop == 1) { 
+			System.out.println(" kaart.");
+		} else {
+			System.out.println(" kaarten.");
+		}
+		System.out.println("Kaartverkoop per attractie: ");
+		for (int t = 0 ; t < kermis.attracties.size() ; t++) {
+			System.out.print("- " + kermis.attracties.get(t).getNaam());
+			System.out.print(": " + kermis.attracties.get(t).getKaartverkoopAttractie());
+			if (kermis.attracties.get(t).getKaartverkoopAttractie() == 1) {
+				System.out.println(" kaart.");
+			} else {
+				System.out.println(" kaarten.");	
+			}
+		}
+	}	
 	
+	void geefInfoOmzet(Kermis kermis) {
+		NumberFormat naarEuro = NumberFormat.getCurrencyInstance(Locale.getDefault());
+		System.out.print("Totale omzet: " + naarEuro.format(kermis.kassa.totaleOmzet) + ". ");
+		System.out.println("Omzet per attractie: ");
+		for (int t = 0 ; t < kermis.attracties.size() ; t++) {
+			System.out.print("- " + kermis.attracties.get(t).getNaam());			
+			double omzet = kermis.attracties.get(t).getOmzetAttractie();		
+			System.out.println(": " + naarEuro.format(omzet) + ".");
+		}
+	}	
 }

@@ -1,9 +1,13 @@
 package kermisPackage;
 
-class Ladderklimmen extends Attractie{
+class Ladderklimmen extends Attractie implements GokAttractie {
 	String naam = "ladderklimmen";
 	double prijs = 5.0;
 	int oppervlakte;
+	
+	@Override public double kansSpelBelastingBetalen() {
+		return 0.3 * omzetAttractie;
+	}
 	
 	@Override String getNaam() {
 		return naam;

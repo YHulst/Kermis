@@ -1,9 +1,33 @@
 package kermisPackage;
 
-class Hawaii extends Attractie{
+class Hawaii extends RisicoRijkAttractie{
 	String naam = "hawaii";
 	double prijs = 3.9;
 	int oppervlakte;
+	int draaiLimiet = 10;
+	boolean gekeurd;
+	int keerGedraaid;
+	
+	@Override int getDraaiLimiet() {
+		return draaiLimiet;
+	}
+	
+	@Override void setKeerGedraaid() {
+		keerGedraaid++;
+	}
+	
+	@Override int getKeerGedraaid() {
+		return keerGedraaid;
+	}
+	
+	@Override boolean opstellingsKeuring() {
+		gekeurd = true;
+		return gekeurd;
+	}
+	
+	@Override boolean getGekeurd() {
+		return gekeurd;
+	}
 	
 	@Override String getNaam() {
 		return naam;

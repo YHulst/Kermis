@@ -1,9 +1,33 @@
 package kermisPackage;
 
-class Spin extends Attractie{
+class Spin extends RisicoRijkAttractie{
 	String naam = "spin";
 	double prijs = 2.25;
 	int oppervlakte;
+	int draaiLimiet = 5;
+	boolean gekeurd;
+	int keerGedraaid;
+	
+	@Override int getDraaiLimiet() {
+		return draaiLimiet;
+	}
+	
+	@Override void setKeerGedraaid() {
+		keerGedraaid++;
+	}
+	
+	@Override int getKeerGedraaid() {
+		return keerGedraaid;
+	}
+	
+	@Override boolean opstellingsKeuring() {
+		gekeurd = true;
+		return gekeurd;
+	}
+	
+	@Override boolean getGekeurd() {
+		return gekeurd;
+	}
 	
 	@Override String getNaam() {
 		return naam;

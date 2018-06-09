@@ -1,8 +1,6 @@
 package kermisPackage;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Scanner;
 
 public class Kermis {
@@ -38,6 +36,58 @@ public class Kermis {
 		}			
 	}
 	
+	void inAttractiegaan(Kermis kermis) {
+		System.out.println("Wij hebben de volgende attracties:");	
+		for (int t = 0 ; t < attracties.size() ; t++) {	
+			System.out.println(t+1 + " " + attracties.get(t).getNaam());				
+		}		
+		int antwoord;		
+		do {
+			System.out.println("Type het nummer van de attractie waar je in wilt:");
+			antwoord = kermis.intInvoeren();
+		}
+		while (antwoord != 1 && antwoord != 2 && antwoord != 3 && antwoord != 4 && antwoord != 5 && antwoord != 6); 
+		Attractie attractie = attracties.get(antwoord - 1);
+		boolean draait = true;
+		if (attractie instanceof RisicoRijkAttractie) {					
+			kermis.checkKeuringGehad(attractie, kermis);			
+			draait = kermis.checkDraailimiet(attractie);
+		}
+		if (attractie instanceof GokAttractie) {
+			System.out.println("Dit attractie is een gokattractie.");
+		}
+		if (draait) {
+			attractie.draaien();
+			kassa.kasBijhouden(attractie);	
+		}			
+		kermis.bezoeken(kermis);
+		
+	}	
+	
+	void checkKeuringGehad(Attractie attractie, Kermis kermis) {	
+		if (((RisicoRijkAttractie) attractie).getGekeurd()) {
+			return;
+		} else if (((RisicoRijkAttractie) attractie).getGekeurd() == false) {
+			String antwoord;
+			do {
+				System.out.println("Dit attractie moet eerst gekeurd worden. Type 'k' als de keuring klaar is.");
+				antwoord = kermis.stringInvoeren();
+			}while (!antwoord.equals("k"));
+			((RisicoRijkAttractie) attractie).opstellingsKeuring();			}
+	}
+	
+	boolean checkDraailimiet(Attractie attractie) {
+		if (((RisicoRijkAttractie) attractie).getKeerGedraaid() >= ((RisicoRijkAttractie) attractie).getDraaiLimiet()) {
+			System.out.println("De draailimiet van de " + attractie.getNaam() + " is overschreden.");			
+			return false;
+		}else {
+			((RisicoRijkAttractie) attractie).setKeerGedraaid();
+			System.out.println("keer gedraaid: " + ((RisicoRijkAttractie) attractie).getKeerGedraaid());
+			System.out.println("draailimiet: " + ((RisicoRijkAttractie) attractie).getDraaiLimiet());
+			return true;
+		}
+	}
+		
 	void informatieGeven(Kermis kermis) {
 		String antwoord;
 		do {
@@ -47,64 +97,12 @@ public class Kermis {
 			antwoord = kermis.stringInvoeren();			
 		} while(!(antwoord.equals("k")) && !(antwoord.equals("o")));	
 		if (antwoord.equals("k")) {
-			kermis.geefInfoKaartverkoop(kermis);
+			kermis.kassa.geefInfoKaartverkoop(kermis);
 		} else if (antwoord.equals("o")) {
-			kermis.geefInfoOmzet(kermis);
+			kermis.kassa.geefInfoOmzet(kermis);
 		}		
 		kermis.bezoeken(kermis);
-	}
-	
-	void geefInfoKaartverkoop(Kermis kermis) {
-		System.out.print("Totale kaartverkoop: " + kermis.kassa.totaleKaartverkoop);
-		if (kermis.kassa.totaleKaartverkoop == 1) { 
-			System.out.println(" kaart.");
-		} else {
-			System.out.println(" kaarten.");
-		}
-		System.out.println("Kaartverkoop per attractie: ");
-		int teller = -1;
-		for (Attractie attractie : attracties) {
-			teller++;
-			System.out.print("- " + attracties.get(teller).getNaam());
-			System.out.print(": " + attracties.get(teller).getKaartverkoopAttractie());
-			if (attracties.get(teller).getKaartverkoopAttractie() == 1) {
-				System.out.println(" kaart.");
-			} else {
-				System.out.println(" kaarten.");	
-			}
-		}
-	}
-	
-	void geefInfoOmzet(Kermis kermis) {
-		NumberFormat naarEuro = NumberFormat.getCurrencyInstance(Locale.getDefault());
-		System.out.print("Totale omzet: " + naarEuro.format(kermis.kassa.totaleOmzet) + ". ");
-		System.out.println("Omzet per attractie: ");
-		int teller = -1;
-		for (Attractie attractie : attracties) {
-			teller++;
-			System.out.print("- " + attracties.get(teller).getNaam());			
-			double omzet = attracties.get(teller).getOmzetAttractie();		
-			System.out.println(": " + naarEuro.format(omzet) + ".");
-		}
-	}
-	
-	void inAttractiegaan(Kermis kermis) {
-		System.out.println("Wij hebben de volgende attracties:");
-		int teller = 0;
-		for (Attractie attractie : attracties) {
-			teller++;
-			System.out.println(teller + " " + attracties.get(teller-1).getNaam());				
-		}		
-		int antwoord;		
-		do {
-			System.out.println("Type het nummer van de attractie waar je in wilt:");
-			antwoord = kermis.intInvoeren();
-		}
-		while (antwoord != 1 && antwoord != 2 && antwoord != 3 && antwoord != 4 && antwoord != 5 && antwoord != 6); 		
-		attracties.get(antwoord - 1).draaien();
-		kassa.kasBijhouden(kermis, antwoord);		
-		kermis.bezoeken(kermis);
-	}			
+	}		
 	
 	int intInvoeren() {
 		 Scanner sc = new Scanner(System.in); 
