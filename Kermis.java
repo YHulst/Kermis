@@ -2,10 +2,12 @@ package kermisPackage;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Kermis {
 	ArrayList <Attractie> attracties;
-	Kassa kassa;		
+	Kassa kassa;	
+	BelastingInspecteur inspecteur;
 	
 	Kermis(){
 		attracties = new ArrayList();
@@ -16,6 +18,7 @@ public class Kermis {
 		attracties.add(new Hawaii());
 		attracties.add(new Ladderklimmen());	
 		kassa = new Kassa();
+		inspecteur = new BelastingInspecteur();
 		System.out.print("Welkom op de kermis!");
 	}
 
@@ -36,7 +39,26 @@ public class Kermis {
 		}			
 	}
 	
-	void inAttractiegaan(Kermis kermis) {
+	void inAttractiegaan(Kermis kermis) {	
+		Attractie attractie = kermis.attractieKiezen(kermis);
+		boolean draait = true;
+		if (attractie instanceof RisicoRijkAttractie) {					
+			kermis.checkKeuringGehad(attractie, kermis);			
+			draait = kermis.checkDraailimiet(attractie);
+		}
+		
+		if (draait) {
+			attractie.draaien();
+			kassa.kasBijhouden(attractie);	
+			int randomNum = ThreadLocalRandom.current().nextInt(1, 16);
+			if (randomNum == 1) {
+				inspecteur.langskomen(kermis);
+			}
+		}			
+		kermis.bezoeken(kermis);		
+	}	
+	
+	Attractie attractieKiezen(Kermis kermis) {
 		System.out.println("Wij hebben de volgende attracties:");	
 		for (int t = 0 ; t < attracties.size() ; t++) {	
 			System.out.println(t+1 + " " + attracties.get(t).getNaam());				
@@ -47,22 +69,8 @@ public class Kermis {
 			antwoord = kermis.intInvoeren();
 		}
 		while (antwoord != 1 && antwoord != 2 && antwoord != 3 && antwoord != 4 && antwoord != 5 && antwoord != 6); 
-		Attractie attractie = attracties.get(antwoord - 1);
-		boolean draait = true;
-		if (attractie instanceof RisicoRijkAttractie) {					
-			kermis.checkKeuringGehad(attractie, kermis);			
-			draait = kermis.checkDraailimiet(attractie);
-		}
-		if (attractie instanceof GokAttractie) {
-			System.out.println("Dit attractie is een gokattractie.");
-		}
-		if (draait) {
-			attractie.draaien();
-			kassa.kasBijhouden(attractie);	
-		}			
-		kermis.bezoeken(kermis);
-		
-	}	
+		return attracties.get(antwoord - 1);				
+	}
 	
 	void checkKeuringGehad(Attractie attractie, Kermis kermis) {	
 		if (((RisicoRijkAttractie) attractie).getGekeurd()) {

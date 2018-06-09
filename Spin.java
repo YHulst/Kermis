@@ -1,12 +1,18 @@
 package kermisPackage;
 
-class Spin extends RisicoRijkAttractie{
+class Spin extends RisicoRijkAttractie implements GokAttractie{
 	String naam = "spin";
 	double prijs = 2.25;
 	int oppervlakte;
 	int draaiLimiet = 5;
 	boolean gekeurd;
 	int keerGedraaid;
+	
+	@Override public double kansSpelBelastingBetalen() {
+		double belasting = 0.3 * omzetAttractie;
+		omzetAttractie -= belasting;
+		return belasting;
+	}
 	
 	@Override int getDraaiLimiet() {
 		return draaiLimiet;

@@ -6,6 +6,8 @@ import java.util.Locale;
 class Kassa {
 	int totaleKaartverkoop;
 	double totaleOmzet;
+	int aantalBezoekenInspecteur;
+	double totaalIngehoudenBelasting;
 	
 	void kasBijhouden(Attractie attractie) {	
 		attractie.setKaartverkoopAttractie();		
@@ -42,5 +44,7 @@ class Kassa {
 			double omzet = kermis.attracties.get(t).getOmzetAttractie();		
 			System.out.println(": " + naarEuro.format(omzet) + ".");
 		}
+		System.out.println("Aantal bezoeken belastinginspecteur: " + kermis.kassa.aantalBezoekenInspecteur + ".");
+		System.out.println("Totaal ingehouden belasting: " + naarEuro.format(kermis.kassa.totaalIngehoudenBelasting) + ".");
 	}	
 }

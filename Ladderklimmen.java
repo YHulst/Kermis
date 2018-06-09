@@ -6,7 +6,9 @@ class Ladderklimmen extends Attractie implements GokAttractie {
 	int oppervlakte;
 	
 	@Override public double kansSpelBelastingBetalen() {
-		return 0.3 * omzetAttractie;
+		double belasting = 0.3 * omzetAttractie;
+		omzetAttractie -= belasting;
+		return belasting;
 	}
 	
 	@Override String getNaam() {
