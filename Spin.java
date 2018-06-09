@@ -6,7 +6,6 @@ class Spin extends RisicoRijkAttractie implements GokAttractie{
 	int oppervlakte;
 	int draaiLimiet = 5;
 	boolean gekeurd;
-	int keerGedraaid;
 	
 	@Override public double kansSpelBelastingBetalen() {
 		double belasting = 0.3 * omzetAttractie;
@@ -16,15 +15,7 @@ class Spin extends RisicoRijkAttractie implements GokAttractie{
 	
 	@Override int getDraaiLimiet() {
 		return draaiLimiet;
-	}
-	
-	@Override void setKeerGedraaid() {
-		keerGedraaid++;
-	}
-	
-	@Override int getKeerGedraaid() {
-		return keerGedraaid;
-	}
+	}	
 	
 	@Override boolean opstellingsKeuring() {
 		gekeurd = true;
@@ -62,5 +53,4 @@ class Spin extends RisicoRijkAttractie implements GokAttractie{
 	@Override void draaien() {
 		System.out.println("De attractie " + naam + " draait.");
 	}
-
 }

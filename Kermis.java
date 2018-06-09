@@ -39,22 +39,33 @@ public class Kermis {
 		}			
 	}
 	
+	void informatieGeven(Kermis kermis) {
+		String antwoord;
+		do {
+			System.out.println("Wat wil je weten?");
+			System.out.println("- Voor informatie over de kaartverkoop: type 'k'.");
+			System.out.println("- Voor informatie over de omzet: type 'o'. " );			
+			antwoord = kermis.stringInvoeren();			
+		} while(!(antwoord.equals("k")) && !(antwoord.equals("o")));	
+		if (antwoord.equals("k")) {
+			kermis.kassa.geefInfoKaartverkoop(kermis);
+		} else if (antwoord.equals("o")) {
+			kermis.kassa.geefInfoOmzet(kermis);
+		}		
+		kermis.bezoeken(kermis);
+	}
+	
 	void inAttractiegaan(Kermis kermis) {	
-		Attractie attractie = kermis.attractieKiezen(kermis);
-		boolean draait = true;
+		Attractie attractie = attractieKiezen(kermis);		
 		if (attractie instanceof RisicoRijkAttractie) {					
-			kermis.checkKeuringGehad(attractie, kermis);			
-			draait = kermis.checkDraailimiet(attractie);
-		}
-		
-		if (draait) {
-			attractie.draaien();
-			kassa.kasBijhouden(attractie);	
-			int randomNum = ThreadLocalRandom.current().nextInt(1, 16);
-			if (randomNum == 1) {
-				inspecteur.langskomen(kermis);
-			}
-		}			
+			inRisicoRijkAttractieGaan(attractie);		
+		}				
+		attractie.draaien();
+		kassa.kasBijhouden(attractie);	
+		int randomNum = ThreadLocalRandom.current().nextInt(1, 16);
+		if (randomNum == 1) {
+			inspecteur.langskomen(kermis);
+		}				
 		kermis.bezoeken(kermis);		
 	}	
 	
@@ -72,45 +83,38 @@ public class Kermis {
 		return attracties.get(antwoord - 1);				
 	}
 	
-	void checkKeuringGehad(Attractie attractie, Kermis kermis) {	
+	void inRisicoRijkAttractieGaan(Attractie attractie) {
+		checkKeuringGehad(attractie);
+		try {			
+			checkDraailimiet(attractie);
+		} catch (AttractieOverDraaiLimietException x) {
+			String antwoord;
+			do {
+				System.out.println("Dit attractie is over zijn draailimiet. Type 'm' als de monteur geweest is.");
+				antwoord = stringInvoeren();
+			} while(!antwoord.equals("m"));
+		}
+	}
+	
+	void checkKeuringGehad(Attractie attractie) {	
 		if (((RisicoRijkAttractie) attractie).getGekeurd()) {
 			return;
 		} else if (((RisicoRijkAttractie) attractie).getGekeurd() == false) {
 			String antwoord;
 			do {
 				System.out.println("Dit attractie moet eerst gekeurd worden. Type 'k' als de keuring klaar is.");
-				antwoord = kermis.stringInvoeren();
+				antwoord = stringInvoeren();
 			}while (!antwoord.equals("k"));
 			((RisicoRijkAttractie) attractie).opstellingsKeuring();			}
-	}
+	}	
 	
-	boolean checkDraailimiet(Attractie attractie) {
-		if (((RisicoRijkAttractie) attractie).getKeerGedraaid() >= ((RisicoRijkAttractie) attractie).getDraaiLimiet()) {
-			System.out.println("De draailimiet van de " + attractie.getNaam() + " is overschreden.");			
-			return false;
-		}else {
-			((RisicoRijkAttractie) attractie).setKeerGedraaid();
-			System.out.println("keer gedraaid: " + ((RisicoRijkAttractie) attractie).getKeerGedraaid());
-			System.out.println("draailimiet: " + ((RisicoRijkAttractie) attractie).getDraaiLimiet());
-			return true;
-		}
-	}
-		
-	void informatieGeven(Kermis kermis) {
-		String antwoord;
-		do {
-			System.out.println("Wat wil je weten?");
-			System.out.println("- Voor informatie over de kaartverkoop: type 'k'.");
-			System.out.println("- Voor informatie over de omzet: type 'o'. " );			
-			antwoord = kermis.stringInvoeren();			
-		} while(!(antwoord.equals("k")) && !(antwoord.equals("o")));	
-		if (antwoord.equals("k")) {
-			kermis.kassa.geefInfoKaartverkoop(kermis);
-		} else if (antwoord.equals("o")) {
-			kermis.kassa.geefInfoOmzet(kermis);
+	void checkDraailimiet(Attractie attractie) throws AttractieOverDraaiLimietException {
+		int kaarten = attractie.getKaartverkoopAttractie() + 1;
+		int limiet = ((RisicoRijkAttractie) attractie).getDraaiLimiet();
+		if (kaarten >= 2 && (kaarten % limiet) == 1 ){
+			throw new AttractieOverDraaiLimietException();
 		}		
-		kermis.bezoeken(kermis);
-	}		
+	}			
 	
 	int intInvoeren() {
 		 Scanner sc = new Scanner(System.in); 

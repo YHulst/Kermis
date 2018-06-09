@@ -10,10 +10,4 @@ abstract class RisicoRijkAttractie extends Attractie {
 	abstract boolean opstellingsKeuring();
 	
 	abstract boolean getGekeurd();
-	
-	abstract void setKeerGedraaid();
-	
-	abstract int getKeerGedraaid();
-	
-
 }

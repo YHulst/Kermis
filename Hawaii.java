@@ -6,18 +6,9 @@ class Hawaii extends RisicoRijkAttractie{
 	int oppervlakte;
 	int draaiLimiet = 10;
 	boolean gekeurd;
-	int keerGedraaid;
 	
 	@Override int getDraaiLimiet() {
 		return draaiLimiet;
-	}
-	
-	@Override void setKeerGedraaid() {
-		keerGedraaid++;
-	}
-	
-	@Override int getKeerGedraaid() {
-		return keerGedraaid;
 	}
 	
 	@Override boolean opstellingsKeuring() {
@@ -56,6 +47,4 @@ class Hawaii extends RisicoRijkAttractie{
 	@Override void draaien() {
 		System.out.println("De attractie " + naam + " draait.");
 	}
-
-
 }
